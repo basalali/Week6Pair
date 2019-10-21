@@ -17,5 +17,10 @@ namespace ProjectOrganizer.Models
         /// The dept name.
         /// </summary>
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString().PadRight(6) + Name.PadRight(30);
+        }
     }
 }
