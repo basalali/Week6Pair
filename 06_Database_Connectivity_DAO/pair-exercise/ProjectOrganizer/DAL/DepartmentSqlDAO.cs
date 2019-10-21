@@ -12,6 +12,7 @@ namespace ProjectOrganizer.DAL
     {
         private string connectionString;
         private string sql_GetDepartmentById = "SELECT * FROM department WHERE department_id = @department_id";
+        private string sql_NewDepartment = "INSERT.INTO department (department_id, name), VALUES(department_id, name)"
         private string sql_UpdateDepartment = " UPDATE department SET id = ???, name = ???";
 
         // Single Parameter Constructor
@@ -39,14 +40,14 @@ namespace ProjectOrganizer.DAL
                         cmd.Parameters.AddWithValue("@department_id", department_id);
 
                         SqlDataReader reader = cmd.ExecuteReader();
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             Department department = new Department();
                             department.Id = Convert.ToInt32(reader["department_id"]);
                             department.Name = Convert.ToString(reader["Name"]);
 
                             departments.Add(department);
-                          
+
                         }
 
                     }
@@ -68,53 +69,71 @@ namespace ProjectOrganizer.DAL
         /// <returns>The id of the new department (if successful).</returns>
         public int CreateDepartment(Department newDepartment)
         {
-            //throw new NotImplementedException();
-            
-
-
-        }
-        
-        /// <summary>
-        /// Updates an existing department.
-        /// </summary>
-        /// <param name="updatedDepartment">The department object.</param>
-        /// <returns>True, if successful.</returns>
-        public bool UpdateDepartment(Department updatedDepartment)
-        {
-            //throw new NotImplementedException();
-
-            bool result = false;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
-
                 {
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(sql_UpdateDepartment, conn))
+                    using (SqlCommand cmd = new SqlCommand(sql_NewDepartment, conn))
                     {
-                        cmd.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
-                        cmd.Parameters.AddWithValue("@Name", updatedDepartment.Name);
+                        cmd.Parameters.AddWithValue("@department_id", newDepartment.Id);
+                        cmd.Parameters.AddWithValue("@Name", newDepartment.Name);
 
-                        string newInstance = cmd.ExecuteNonQuery().ToString();
-                       
-                        if(newInstance.Contains(new))
-                        {
-                            return true;
-                        }
+                        int count = cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch
+            {
+                return "";
+            }
+            return newDepartment.Id;
+        }
 
+
+    }
+
+    /// <summary>
+    /// Updates an existing department.
+    /// </summary>
+    /// <param name="updatedDepartment">The department object.</param>
+    /// <returns>True, if successful.</returns>
+    public bool UpdateDepartment(Department updatedDepartment)
+    {
+
+
+        bool result = false;
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(sql_UpdateDepartment, conn))
+                {
+                    cmd.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
+                    cmd.Parameters.AddWithValue("@Name", updatedDepartment.Name);
+
+                    int count = cmd.ExecuteNonQuery();
+
+                    if (count > 0)
+                    {
+                        return true;
                     }
 
                 }
 
-
             }
-            catch
-            {
 
-            }
-            return result;
 
         }
+        catch
+        {
+            return false;
+        }
+        return result;
 
     }
-}
+
+} 
+
