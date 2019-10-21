@@ -11,9 +11,9 @@ namespace ProjectOrganizer.DAL
     public class DepartmentSqlDAO : IDepartmentDAO
     {
         private string connectionString;
-        private string sql_GetDepartmentById = "SELECT * FROM department WHERE department_id = @department_id";
-        private string sql_NewDepartment = "INSERT.INTO department (department_id, name), VALUES(department_id, name)"
-        private string sql_UpdateDepartment = " UPDATE department SET id = ???, name = ???";
+        private string sql_GetDepartmentById = "SELECT department_id, name FROM department ";
+        private string sql_NewDepartment = "INSERT INTO department (name) VALUES(@Name)";
+        private string sql_UpdateDepartment = " UPDATE department SET name = @Name WHERE department_id = @id";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -37,8 +37,6 @@ namespace ProjectOrganizer.DAL
                     using (SqlCommand cmd = new SqlCommand(sql_GetDepartmentById, conn))
                     {
 
-                        cmd.Parameters.AddWithValue("@department_id", department_id);
-
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -54,7 +52,6 @@ namespace ProjectOrganizer.DAL
 
                 }
             }
-
             catch
             {
                 departments = new List<Department>();
@@ -69,6 +66,7 @@ namespace ProjectOrganizer.DAL
         /// <returns>The id of the new department (if successful).</returns>
         public int CreateDepartment(Department newDepartment)
         {
+            int result = 0;
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -76,64 +74,66 @@ namespace ProjectOrganizer.DAL
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand(sql_NewDepartment, conn))
                     {
-                        cmd.Parameters.AddWithValue("@department_id", newDepartment.Id);
+                       
                         cmd.Parameters.AddWithValue("@Name", newDepartment.Name);
 
-                        int count = cmd.ExecuteNonQuery();
+                        result = cmd.ExecuteNonQuery();
+                       
                     }
                 }
+            }
+            catch(SqlException)
+            {
+                return result;
+            }
+            return result;
+        }
+
+
+
+
+        /// <summary>
+        /// Updates an existing department.
+        /// </summary>
+        /// <param name="updatedDepartment">The department object.</param>
+        /// <returns>True, if successful.</returns>
+        public bool UpdateDepartment(Department updatedDepartment)
+        {
+
+
+            bool result = false;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sql_UpdateDepartment, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", updatedDepartment.Id);
+                        cmd.Parameters.AddWithValue("@Name", updatedDepartment.Name);
+
+                        int count = cmd.ExecuteNonQuery();
+
+                        if (count == 1)
+                        {
+                            return true;
+                        }
+
+                    }
+
+                }
+
+
             }
             catch
             {
-                return "";
+                throw;
             }
-            return newDepartment.Id;
-        }
+            return result;
 
+        }
 
     }
-
-    /// <summary>
-    /// Updates an existing department.
-    /// </summary>
-    /// <param name="updatedDepartment">The department object.</param>
-    /// <returns>True, if successful.</returns>
-    public bool UpdateDepartment(Department updatedDepartment)
-    {
-
-
-        bool result = false;
-        try
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-
-            {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand(sql_UpdateDepartment, conn))
-                {
-                    cmd.Parameters.AddWithValue("@department_id", updatedDepartment.Id);
-                    cmd.Parameters.AddWithValue("@Name", updatedDepartment.Name);
-
-                    int count = cmd.ExecuteNonQuery();
-
-                    if (count > 0)
-                    {
-                        return true;
-                    }
-
-                }
-
-            }
-
-
-        }
-        catch
-        {
-            return false;
-        }
-        return result;
-
-    }
-
-} 
+}
 

@@ -215,7 +215,7 @@ namespace ProjectOrganizer
             }
             else
             {
-                Console.WriteLine("**** NO RESULTS ****");
+                Console.WriteLine("**** NO Results ****");
             }
         }
 
