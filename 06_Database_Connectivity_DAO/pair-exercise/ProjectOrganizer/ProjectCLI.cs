@@ -20,6 +20,7 @@ namespace ProjectOrganizer
         const string Command_CreateProject = "8";
         const string Command_AssignEmployeeToProject = "9";
         const string Command_RemoveEmployeeFromProject = "10";
+        const string Command_DepartmentCount = "11"; // Step 1
         const string Command_Quit = "q";
 
         private IEmployeeDAO employeeDAO;
@@ -85,7 +86,9 @@ namespace ProjectOrganizer
                     case Command_RemoveEmployeeFromProject:
                         RemoveEmployeeFromProject();
                         break;
-
+                    case Command_DepartmentCount: // STEP 3
+                        DisplayDepartmentCount(); // create method
+                        break;
                     case Command_Quit:
                         Console.WriteLine("Thank you for using the project organizer");
                         return;
@@ -290,7 +293,18 @@ namespace ProjectOrganizer
                 Console.WriteLine("**** NO RESULTS ****");
             }
         }
-
+        private void DisplayDepartmentCount() // STEP 4
+        {
+            int result = departmentDAO.GetDepartmentCount();
+            if (result > 0)
+            {
+                Console.WriteLine($"There are {result} department(s).");
+            }
+            else
+            {
+                Console.WriteLine($"There are no departments.");
+            }
+        }
         private void PrintHeader()
         {
             Console.WriteLine(@" ______                 _                           _____           _           _       _____  ____  ");
@@ -318,6 +332,7 @@ namespace ProjectOrganizer
             Console.WriteLine(" 8 - Create Project");
             Console.WriteLine(" 9 - Assign Employee to Project");
             Console.WriteLine("10 - Remove Employee from Project");
+            Console.WriteLine("11 - Get Department Count"); // STEP 2
 
             Console.WriteLine(" Q - Quit");
             Console.WriteLine();

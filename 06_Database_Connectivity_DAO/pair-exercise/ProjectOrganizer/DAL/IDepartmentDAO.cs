@@ -28,5 +28,12 @@ namespace ProjectOrganizer.DAL
         /// <param name="updatedDepartment">The department object to update.</param>
         /// <returns>True, when successful.</returns>
         bool UpdateDepartment(Department updatedDepartment);
+
+      
+        /// <summary>
+        /// Returns count of departments.
+        /// </summary>
+        /// <returns></returns>
+        int GetDepartmentCount(); // STEP 5
     }
 }

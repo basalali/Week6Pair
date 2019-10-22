@@ -1,4 +1,4 @@
-﻿ using ProjectOrganizer.Models;
+﻿using ProjectOrganizer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace ProjectOrganizer.DAL
         private string sql_GetDepartmentById = "SELECT department_id, name FROM department ";
         private string sql_NewDepartment = "INSERT INTO department (name) VALUES(@Name)";
         private string sql_UpdateDepartment = " UPDATE department SET name = @Name WHERE department_id = @id";
+        private string sql_GetDepartmentCount = "SELECT count(*) FROM department;";
 
         // Single Parameter Constructor
         public DepartmentSqlDAO(string dbConnectionString)
@@ -74,15 +75,15 @@ namespace ProjectOrganizer.DAL
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand(sql_NewDepartment, conn))
                     {
-                       
+
                         cmd.Parameters.AddWithValue("@Name", newDepartment.Name);
 
                         result = cmd.ExecuteNonQuery();
-                       
+
                     }
                 }
             }
-            catch(SqlException)
+            catch (SqlException)
             {
                 return result;
             }
@@ -132,6 +133,39 @@ namespace ProjectOrganizer.DAL
             }
             return result;
 
+        }
+
+        public int GetDepartmentCount() // STEP 6
+        {
+
+            int result = 0;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sql_GetDepartmentCount, conn))
+                    {
+                        result = (int)cmd.ExecuteScalar();
+                        if (result == 1)
+                        {
+                            return result;
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+            catch(Exception ex)
+            {
+                result = 0;
+            }
+
+            return result;
         }
 
     }
