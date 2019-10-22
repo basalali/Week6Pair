@@ -21,14 +21,14 @@ namespace ProjectOrgTest
         /// </summary>
         private TransactionScope transaction;
 
- 
+
         [TestInitialize]
         public void Setup()
         {
             // Begin the transaction
             transaction = new TransactionScope();
-           
-      
+
+
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 SqlCommand cmd;
@@ -45,9 +45,9 @@ namespace ProjectOrgTest
 
         }
 
-    
 
-    [TestCleanup]
+
+        [TestCleanup]
         public void Cleanup()
         {
             // Roll back the transaction
@@ -59,19 +59,42 @@ namespace ProjectOrgTest
         public void GetDepartmentTest()
         {
             //Arrange
-            Department department = new Department();
-            
 
             DepartmentSqlDAO gettem = new DepartmentSqlDAO(ConnectionString);
 
-            List<Department> departmentList = new List<Department>();
-                
-                departmentList.GetDepartments();
-            
+            List<Department> departmentList = (List<Department>)gettem.GetDepartments();
+
             //Assert
             Assert.IsNotNull(departmentList);
             Assert.AreEqual(numberOfDepartments + 1, departmentList.Count);
-       
+
+        }
+        [TestMethod]
+        public void Create_Dept_Test()
+        {
+            DepartmentSqlDAO testClass = new DepartmentSqlDAO(ConnectionString);
+
+            Department createDepartTest = new Department();
+            createDepartTest.Name = "TestCreate";         
+            int isItWorking = testClass.CreateDepartment(createDepartTest);
+            List<Department> deptList = (List<Department>)testClass.GetDepartments();
+
+            Assert.AreEqual(1, isItWorking);
+            Assert.AreEqual(numberOfDepartments + 2, deptList.Count);
+
+        }
+
+        [TestMethod]
+        public void Update_Department_Test()
+        {
+            DepartmentSqlDAO testClass = new DepartmentSqlDAO(ConnectionString);
+            Department testDept = new Department();
+
+            testDept.Name = "TechElevator";
+            testDept.Id = departmentID;
+            bool isItWorking = testClass.UpdateDepartment(testDept);
+
+            Assert.IsTrue(isItWorking);
         }
     }
-}
+}   
