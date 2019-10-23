@@ -71,7 +71,7 @@ namespace ProjectOrgTest
 
             //Assert
             Assert.IsNotNull(employeeList);
-            Assert.AreEqual(numberOfEmployees, employeeList.Count);
+            Assert.AreEqual(numberOfEmployees + 1, employeeList.Count);
 
         }
 
