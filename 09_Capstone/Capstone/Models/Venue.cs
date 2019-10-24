@@ -4,15 +4,20 @@ using System.Text;
 
 namespace Capstone.Models
 {
-    class Venue
+   public class Venue
     {
       
-        public int venue_id;
+        public int venue_id { get; set; }
 
-        public string name;
+        public string name { get; set; }
 
-        public int cityId;
+    public int cityId { get; set; }
 
-        public string description;
+    public string description { get; set; }
+
+        public override string ToString()
+        {
+            return venue_id.ToString("N0").PadRight(5) + name.PadRight(20) + cityId.ToString("N0").PadRight(30) + description.PadRight(10);
+        }
     }
 }

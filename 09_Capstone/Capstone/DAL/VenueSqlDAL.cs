@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Capstone.DAL
 {
-    class VenueSqlDAL
+   public class VenueSqlDAL
     {
 
         //get all venues provided a space_id
@@ -24,11 +24,12 @@ namespace Capstone.DAL
         {
             connectionString = databaseconnectionString;
         }
-
+        //List<Venue> GetVenueName();
+        //List<Venue> GetVenueName(string name);
     //returns list of venue names
-        public IList<Venue> GetVenueName()
+        public List<Venue> GetVenueName()
         {
-            IList<Venue> venues = new List<Venue>();
+            List<Venue> venues = new List<Venue>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -57,8 +58,26 @@ namespace Capstone.DAL
             }
             return venues;
         }
-
         //returns "list" information about selected venue
+        private Venue ConvertReaderToVenue(SqlDataReader reader)
+        {
+            Venue vnu = new Venue();
+
+            vnu.venue_id = Convert.ToInt32(reader["venue_id"]);
+            vnu.name = Convert.ToString(reader["name"]);
+            vnu.cityId = Convert.ToInt32(reader["city_id"]);
+            vnu.description = Convert.ToString(reader["description"]);
+
+            return vnu;
+        }
+        
+        public List<Venue> GetVenueName()
+        {
+            try
+            {
+
+            }
+        }
 
 
 
