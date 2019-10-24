@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Capstone.DAL
 {
-    class SpaceSqlDAL
+    public class SpaceSqlDAL
     {
 
         //get all venues provided a space_id
@@ -30,9 +30,9 @@ namespace Capstone.DAL
         //include Space Name, when it opens, when it closes,
         //the daily $ rate and the max occupancy.
         //finally displays menu to either reserve space or return to previous screen.
-        public IList<Space> GetSpaces()
+        public List<Space> GetSpaces()
         {
-            IList<Space> spaces = new List<Space>();
+            List<Space> spaces = new List<Space>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))

@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Capstone.Models
 {
-    class Venue
+   public class Venue
     {
+
 
         public int venue_id { get; set; }
 
@@ -13,7 +14,12 @@ namespace Capstone.Models
 
         public int cityId { get; set; }
 
-        public string description { get; set;
+        public string description { get; set; }
+
+        public override string ToString()
+        {
+            return venue_id.ToString() + ") ".PadRight(15) + name.PadRight(20);
         }
+
     }
 }

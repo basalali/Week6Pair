@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using Capstone.DAL;
 
 namespace Capstone
 {
@@ -17,9 +18,9 @@ namespace Capstone
 
             string connectionString = configuration.GetConnectionString("Project");
 
+           
             UserInterface ui = new UserInterface(connectionString);
-            ui.Run();
-
+            ui.RunInterface();
 
 
 

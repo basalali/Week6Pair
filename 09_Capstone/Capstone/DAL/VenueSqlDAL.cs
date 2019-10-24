@@ -8,13 +8,13 @@ using System.Data.SqlClient;
 
 namespace Capstone.DAL
 {
-    class VenueSqlDAL
+    public class VenueSqlDAL : IVenueDAO
     {
 
         //get all venues provided a space_id
 
         private string connectionString;
-        private string sql_GetVenueName = "SELECT name FROM venue";
+        private string sql_GetVenueName = "SELECT * FROM venue";
         private string sql_GetVenueDetails = "SELECT venue.name, city.name, abbreviation, category.name, description FROM venue" +
             "JOIN city ON city.id = venue.city_id" +
             "JOIN state ON state.abbreviation = city.state_abbreviation" +
@@ -31,7 +31,7 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
-    //returns list of venue names
+        //returns list of venue names
         public IList<Venue> GetVenueName()
         {
             IList<Venue> venues = new List<Venue>();
@@ -47,28 +47,71 @@ namespace Capstone.DAL
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Venue venue = new Venue();
-                            venue.name = Convert.ToString(reader["name"]);
-
+                            Venue venue = ConvertReaderToVenue(reader);
+                     
                             venues.Add(venue);
                         }
-
+                        
                     }
+                    return venues;
 
                 }
             }
-            catch
+            catch(SqlException)
             {
                 venues = new List<Venue>();
             }
             return venues;
         }
-
         //returns "list" information about selected venue
+        private Venue ConvertReaderToVenue(SqlDataReader reader)
+        {
+            Venue vnu = new Venue();
+
+            vnu.venue_id = Convert.ToInt32(reader["id"]);
+            vnu.name = Convert.ToString(reader["name"]);
+            vnu.cityId = Convert.ToInt32(reader["city_id"]);
+            vnu.description = Convert.ToString(reader["description"]);
+
+            return vnu;
+        }
+
+        public IList<Venue> GetVenues(int id)
+        {
+            IList<Venue> venues = new List<Venue>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    // column    // param name  
+                    SqlCommand cmd = new SqlCommand(sql_GetVenueName, conn);
+                    // param name    // param value
+                    cmd.Parameters.AddWithValue("@venue_id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Venue vnu = ConvertReaderToVenue(reader);
+                        venues.Add(vnu);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("An error occurred reading venues by ID.");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            return venues;
 
 
 
 
 
+        }
     }
 }
