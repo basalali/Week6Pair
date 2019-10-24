@@ -8,6 +8,7 @@ namespace Capstone
     {
         public UserInterface(string connectionString) // create classes level variable, create instances of DAL
         {
+
         }
 
         public void Run()

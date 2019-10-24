@@ -15,6 +15,12 @@ namespace Capstone.DAL
 
         private string connectionString;
         private string sql_GetVenueName = "SELECT name FROM venue";
+        private string sql_GetVenueDetails = "SELECT venue.name, city.name, abbreviation, category.name, description FROM venue" +
+            "JOIN city ON city.id = venue.city_id" +
+            "JOIN state ON state.abbreviation = city.state_abbreviation" +
+            "JOIN category_venue ON category_venue.venue_id = venue.id" +
+            "JOIN category ON category.id = category_venue.category_id " +
+            "WHERE venue_id = '???'";
 
         /// <summary>
         /// Creates a new sql-based venue dao.

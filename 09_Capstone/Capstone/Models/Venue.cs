@@ -6,13 +6,14 @@ namespace Capstone.Models
 {
     class Venue
     {
-      
-        public int venue_id;
 
-        public string name;
+        public int venue_id { get; set; }
 
-        public int cityId;
+        public string name { get; set; }
 
-        public string description;
+        public int cityId { get; set; }
+
+        public string description { get; set;
+        }
     }
 }
