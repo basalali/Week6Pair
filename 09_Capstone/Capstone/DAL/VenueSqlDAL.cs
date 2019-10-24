@@ -1,15 +1,20 @@
-﻿using System;
+﻿using Capstone.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Capstone.DAL
 {
     class VenueSqlDAL
     {
 
-        //get all venues provided a venue_id
+        //get all venues provided a space_id
 
         private string connectionString;
+        private string sql_GetVenueName = "SELECT name FROM venue";
 
         /// <summary>
         /// Creates a new sql-based venue dao.
@@ -20,27 +25,44 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
-        List<Venue> GetCitiesByVenueID(int venue_Id);
-
-        /// <summary>
-        /// Gets all cities provided a country code.
-        /// </summary>
-        /// <param name="countryCode">The country code to search for.</param>
-        /// <returns></returns>
-        IList<City> GetCitiesByCountryCode(string countryCode);
-
-        public void GetAllVenues()
+    //returns list of venue names
+        public IList<Venue> GetVenueName()
         {
+            IList<Venue> venues = new List<Venue>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
 
+                    using (SqlCommand cmd = new SqlCommand(sql_GetVenueName, conn))
+                    {
 
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            Venue venue = new Venue();
+                            venue.name = Convert.ToString(reader["name"]);
+
+                            venues.Add(venue);
+                        }
+
+                    }
+
+                }
+            }
+            catch
+            {
+                venues = new List<Venue>();
+            }
+            return venues;
         }
+
+        //returns "list" information about selected venue
+
+
+
+
+
     }
 }
-
-
-  
-
-
-
-    
-

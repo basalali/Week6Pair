@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Capstone.Models
 {
-    class Space
+   public class Space
     {
-        public int space_id;
+        public int id;
 
         public int venue_id;
 
@@ -20,6 +20,6 @@ namespace Capstone.Models
 
         public double dailyRate;
 
-        public int maxOccu;
+        public int maxOccupancy;
     }
 }

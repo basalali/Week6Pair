@@ -12,7 +12,7 @@ namespace Capstone
 
         public void Run()
         {
-            Console.WriteLine("Reached the User Interface.");
+            Console.WriteLine("What would you like to do?");
             Console.ReadLine();
         }
     }

@@ -8,6 +8,6 @@ namespace Capstone.Models
     {
         public int venue_id { get; set; }
 
-        public int categoryId { get; set }
+        public int categoryId { get; set; }
     }
 }
