@@ -12,7 +12,7 @@ namespace Capstone
 
         // create classes level variable, create instances of DAL
 
-
+            //afasf 
         int selection;
 
         private SpaceSqlDAL spaceDAL;
