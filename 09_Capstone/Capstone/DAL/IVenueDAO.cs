@@ -11,7 +11,7 @@ namespace Capstone.DAL
         IList<Venue> GetVenueName();
 
         // get single
-        //Venue GetVenues(int id);
+        IList<Venue> GetVenueDetails(int id);
 
     }
 }

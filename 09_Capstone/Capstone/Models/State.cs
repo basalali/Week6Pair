@@ -6,8 +6,8 @@ namespace Capstone.Models
 {
     class State
     {
-        public string abbrev;
+       // public string abbrev;
 
-        public string name;
+       // public string name;
     }
 }

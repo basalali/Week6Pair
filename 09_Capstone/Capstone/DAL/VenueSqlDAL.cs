@@ -20,12 +20,9 @@ namespace Capstone.DAL
             "JOIN state ON state.abbreviation = city.state_abbreviation" +
             "JOIN category_venue ON category_venue.venue_id = venue.id" +
             "JOIN category ON category.id = category_venue.category_id " +
-            "WHERE venue_id = '???'";
+            "WHERE venue_id = @id";
 
-        /// <summary>
-        /// Creates a new sql-based venue dao.
-        /// </summary>
-        /// <param name="databaseconnectionString"></param>
+      
         public VenueSqlDAL(string databaseconnectionString)
         {
             connectionString = databaseconnectionString;
@@ -76,42 +73,76 @@ namespace Capstone.DAL
             return vnu;
         }
 
-        public IList<Venue> GetVenues(int id)
-        {
-            IList<Venue> venues = new List<Venue>();
+        //public IList<Venue> GetVenueDetails(int id)
+        //{
+        //    IList<Venue> venues = new List<Venue>();
 
-            try
+        //    try
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(connectionString))
+        //        {
+        //            conn.Open();
+        //            // column    // param name  
+        //            SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn);                  
+                    
+        //            // param name    // param value
+        //            cmd.Parameters.AddWithValue("@venue_id", id);
+
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                Venue vnu = ConvertReaderToVenue(reader);
+        //                venues.Add(vnu);
+        //            }
+
+        //            return venues;
+        //        }
+        //    }
+        //    catch (SqlException ex)
+        //    {
+        //        Console.WriteLine("An error occurred reading venues by ID.");
+        //        Console.WriteLine(ex.Message);
+        //        throw;
+        //    }
+
+            public IList<Venue> GetVenueDetails(int id)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                IList<Venue> venueDetails = new List<Venue>();
+                try
                 {
-                    conn.Open();
-                    // column    // param name  
-                    SqlCommand cmd = new SqlCommand(sql_GetVenueName, conn);
-                    // param name    // param value
-                    cmd.Parameters.AddWithValue("@venue_id", id);
-
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    using (SqlConnection conn = new SqlConnection(connectionString))
                     {
-                        Venue vnu = ConvertReaderToVenue(reader);
-                        venues.Add(vnu);
+                        conn.Open();
+
+                        using (SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@id", id);
+                         
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                Venue vnu = new Venue();
+                            vnu.venue_id = Convert.ToInt32(reader["id"]);
+                            vnu.name = Convert.ToString(reader["name"]);
+                            vnu.cityId = Convert.ToInt32(reader["city_id"]);
+                            vnu.description = Convert.ToString(reader["description"]);
+
+                           venueDetails.Add(vnu);
+                            }
+                            return venueDetails;
+                        }
                     }
                 }
+
+                catch
+                {
+                    venueDetails= new List<Venue>();
+                }
+
+                return venueDetails;
             }
-            catch (SqlException ex)
-            {
-                Console.WriteLine("An error occurred reading venues by ID.");
-                Console.WriteLine(ex.Message);
-                throw;
-            }
 
-            return venues;
-
-
-
-
-
-        }
+        
     }
 }
