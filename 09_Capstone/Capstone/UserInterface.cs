@@ -18,7 +18,7 @@ namespace Capstone
         const string Command_PreviousMenu = "R";
 
         private SpaceSqlDAL spaceDAL;
-        private IVenueDAO venueDAL;
+        private VenueSqlDAL venueDAL;
         public UserInterface()
             {
      
@@ -66,7 +66,7 @@ namespace Capstone
 
 
                 }
-                PrintHeader();
+               // PrintHeader();
             }
 
         }
@@ -81,9 +81,9 @@ namespace Capstone
 
         private void GetVenueName()
         {
-            IList<Venue> venues = venueDAL.GetVenueName();
+            List<Venue> venues = venueDAL.GetVenueName();
             Console.WriteLine();
-            Console.WriteLine("Printing all of the venues!");
+            Console.WriteLine();
             if (venues.Count > 0)
             {
                 foreach (Venue ven in venues)
@@ -92,8 +92,8 @@ namespace Capstone
                    
                 }
                 Console.WriteLine("R) Return to previous window");
-                //Console.WriteLine();
-                Console.WriteLine("****) Press 2 to get details of the Venue");
+                Console.WriteLine();
+              
             }
             else
             {
@@ -104,17 +104,20 @@ namespace Capstone
 
         private void GetVenueDetails()
         {
-            int id = CLIHelper.GetInteger("Enter the ID of the venue you want to search!");
-            IList<Venue> venue = venueDAL.GetVenueDetails(id);
+            int id = UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search!");
+           // Venue venue = venueDAL.GetVenueDetails(id);
+           // Category catergory =  .GetCatergoyName 
+            //Space 
 
-            if (venue.Count > 0)
+            if (id >= 1 && id <= 15)
             {
-                foreach (Venue ven in venue)
-                {
-                    Console.WriteLine(ven.name.PadRight(15));
+                Venue venue = venueDAL.GetVenueDetails(id);
+
+                Console.WriteLine(venue.name.PadRight(15));
                     Console.WriteLine();
-                    Console.WriteLine(ven.cityId);
-                    Console.WriteLine(ven.description);
+                    //Console.WriteLine("Location" + cityname, stat abbrev); 
+                    //Console.WriteLine("Categories: " ); from catergories 
+                    Console.WriteLine(venue.description);
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
@@ -122,7 +125,7 @@ namespace Capstone
                     Console.WriteLine("1) View Spaces");
                     Console.WriteLine("2 Search for Reservation");
                     Console.WriteLine("R) Return to Previous Screen");
-                    }
+                   
             }
             else
             {

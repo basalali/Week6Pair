@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace Capstone.Models
 {
    public class Venue
@@ -16,10 +17,10 @@ namespace Capstone.Models
 
         public string description { get; set; }
 
-        //public override string ToString()
-        //{
-        //    return venue_id.ToString() + ") ".PadRight(15) + name.PadRight(20);
-        //}
+        public override string ToString()
+        {
+            return venue_id.ToString() + ") ".PadRight(15) + name.PadRight(20);
+        }
 
     }
 }
