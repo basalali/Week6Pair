@@ -15,10 +15,10 @@ namespace Capstone.DAL
         //venue.name, city.name, abbreviation, category.name, description
         private string connectionString;
         private string sql_GetVenueName = "SELECT * FROM venue";
-        private string sql_GetVenueDetails = "SELECT * FROM venue" +
-            "JOIN city ON city.id = venue.city_id" +
-            "JOIN state ON state.abbreviation = city.state_abbreviation" +
-            "JOIN category_venue ON category_venue.venue_id = venue.id" +
+        private string sql_GetVenueDetails = "SELECT * FROM venue " +
+            "JOIN city ON city.id = venue.city_id " +
+            "JOIN state ON state.abbreviation = city.state_abbreviation " +
+            "JOIN category_venue ON category_venue.venue_id = venue.id " +
             "JOIN category ON category.id = category_venue.category_id " +
             "WHERE venue_id = @venue_id ";
 
@@ -84,7 +84,7 @@ namespace Capstone.DAL
 
                     using (SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn))
                     {
-                        //cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@venue_id", id);
 
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
@@ -107,7 +107,7 @@ namespace Capstone.DAL
             return vnu;
         }
 
-       // private Venue GetVenueDetails(int id); 
+
 
     }
 }

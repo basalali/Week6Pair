@@ -12,10 +12,8 @@ namespace Capstone
 
         // create classes level variable, create instances of DAL
 
-        const string Command_GetAllVenues = "1";
-        const string Command_VenueDetails = "2";
-        const string Command_Quit = "Q";
-        const string Command_PreviousMenu = "R";
+
+        int selection;
 
         private SpaceSqlDAL spaceDAL;
         private VenueSqlDAL venueDAL;
@@ -37,52 +35,53 @@ namespace Capstone
 
         public void RunInterface()
         {
-            PrintHeader();
+            Console.WriteLine("Welcome to Excelsior Venues, please hit enter to continue!");
 
-            while (true)
+            string initialSelection = Console.ReadLine();
+            Console.WriteLine();
+
+            while (initialSelection != "3")
             {
-                string command = Console.ReadLine();
+                PrintHeader();
+                initialSelection = Console.ReadLine();            
 
-                Console.Clear();
-                switch (command.ToLower())
+                switch (initialSelection)
                 {
-                    case Command_GetAllVenues:
+                    case "1":
                         GetVenueName(); // this method gets the names of all venues
                         Console.ReadLine();
                         break;
-                    case Command_VenueDetails:
-                        GetVenueDetails(); // pressing 2 will list the details of that venue -- searching by ID.
+                    case "2":
+                        GetVenueDetails(); // this will list the details of that venue -- searching by ID.
                         Console.ReadLine();
                         break;
-                    case Command_Quit:
-                        Console.WriteLine("Thank you for using the venue system");
-                        return;
-                    case Command_PreviousMenu:
-                        return;
+                    case "3":
+                      Console.WriteLine("Thank you for using the Excelsior Venues system");
+                      return;
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
                         break;
 
 
-
                 }
-               // PrintHeader();
             }
-
         }
+            
+          
 
         private void PrintHeader()
         {
             Console.WriteLine("What would you like to do?");
             Console.WriteLine();
             Console.WriteLine("1) List Venues");
-            Console.WriteLine("Q) Quit");
+            Console.WriteLine("2) Get Details of Venue");
+            Console.WriteLine("3) Quit");
         }
 
-        private void GetVenueName()
+        private void GetVenueName() // gets list of all venue names
         {
             List<Venue> venues = venueDAL.GetVenueName();
-            Console.WriteLine();
+            Console.WriteLine("List Of All Venues");
             Console.WriteLine();
             if (venues.Count > 0)
             {
@@ -91,9 +90,8 @@ namespace Capstone
                     Console.WriteLine(ven.venue_id.ToString() + ") " + ven.name);
                    
                 }
-                Console.WriteLine("R) Return to previous window");
-                Console.WriteLine();
-              
+                Console.WriteLine("16) *****Return to previous window*****");
+            
             }
             else
             {
@@ -102,29 +100,29 @@ namespace Capstone
             }         
         }
 
-        private void GetVenueDetails()
+        private void GetVenueDetails() //gets details of that venue
         {
-            int id = UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search!");
-           // Venue venue = venueDAL.GetVenueDetails(id);
-           // Category catergory =  .GetCatergoyName 
-            //Space 
+            selection = Convert.ToInt32(UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search: "));
+            Console.WriteLine();
+            // Category catergory =  .GetCatergoyName 
+            // Space 
 
-            if (id >= 1 && id <= 15)
+            if (selection >= 1 && selection <= 15)
             {
-                Venue venue = venueDAL.GetVenueDetails(id);
+                Venue venue = venueDAL.GetVenueDetails(selection);
 
-                Console.WriteLine(venue.name.PadRight(15));
+                    Console.WriteLine(venue.name.PadRight(15));
                     Console.WriteLine();
-                    //Console.WriteLine("Location" + cityname, stat abbrev); 
-                    //Console.WriteLine("Categories: " ); from catergories 
+                    Console.WriteLine("Location: " ); 
+                    Console.WriteLine("Categories: " );
+                    Console.WriteLine();
                     Console.WriteLine(venue.description);
-                    Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine("What would you like to do next ?" );
                     Console.WriteLine("1) View Spaces");
-                    Console.WriteLine("2 Search for Reservation");
-                    Console.WriteLine("R) Return to Previous Screen");
+                    Console.WriteLine("2  Search for Reservation");
+                    Console.WriteLine("3) Return to Previous Screen");
                    
             }
             else

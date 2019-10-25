@@ -13,6 +13,6 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
-       //public void GetCatergoryName()
+       //public void GetCatergoryContents()
     }
 }
