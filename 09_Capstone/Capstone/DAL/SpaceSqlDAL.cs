@@ -11,13 +11,13 @@ namespace Capstone.DAL
     public class SpaceSqlDAL
     {
 
-        //get all venues
+   
 
         private string connectionString;
-        private string sql_GetSpaces = "SELECT * FROM space ";
+        private string sql_GetSpaces = "SELECT name, open_from, open_to, daily_rate, max_occupancy from space WHERE venue_id = @venue_id";
 
         /// <summary>
-        /// Creates a new sql-based venue dao.
+        /// Creates a new sql-based space DAL.
         /// </summary>
         /// <param name="databaseconnectionString"></param>
         public SpaceSqlDAL(string databaseconnectionString)
@@ -30,9 +30,10 @@ namespace Capstone.DAL
         //include Space Name, when it opens, when it closes,
         //the daily $ rate and the max occupancy.
         //finally displays menu to either reserve space or return to previous screen.
-        public List<Space> GetSpaces()
+       
+        public List<Space> GetSpaceDetails(int id)
         {
-            List<Space> spaces = new List<Space>();
+            List<Space> space = new List<Space>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -41,34 +42,43 @@ namespace Capstone.DAL
 
                     using (SqlCommand cmd = new SqlCommand(sql_GetSpaces, conn))
                     {
+                        cmd.Parameters.AddWithValue("@venue_id", id);
 
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Space space = new Space();
-                            space.id = Convert.ToInt32(reader["space_id"]);
-                            space.name = Convert.ToString(reader["Name"]);
-                            space.isAccessbile = Convert.ToInt32(reader["is_accessible"]);
-                            space.openFrom = Convert.ToInt32(reader["open_from"]);
-                            space.openTo = Convert.ToInt32(reader["open_to"]);
-                            space.dailyRate = Convert.ToDouble(reader["daily_rate"]);
-                            space.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
+                            Space result = ConvertReaderToSpace(reader);
+                            space.Add(result);
 
-                            spaces.Add(space);
                         }
 
                     }
-
+                    return space;
                 }
             }
+
             catch
             {
-                spaces = new List<Space>();
+                space = new List<Space>();
             }
-            return spaces;
+
+            return space;
         }
 
+        private Space ConvertReaderToSpace(SqlDataReader reader)
+        {
+            Space space = new Space();
+            space.venue_id = Convert.ToInt32(reader["venue_id"]);
+            space.id = Convert.ToInt32(reader["id"]);
+            space.name = Convert.ToString(reader["name"]);
+            space.isAccessbile = Convert.ToInt32(reader["is_accessible"]);
+            space.openFrom = Convert.ToInt32(reader["open_from"]);
+            space.openTo = Convert.ToInt32(reader["open_to"]);
+            space.dailyRate = Convert.ToDouble(reader["daily_rate"]);
+            space.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
 
+            return space;
+        }
 
     }
 }
