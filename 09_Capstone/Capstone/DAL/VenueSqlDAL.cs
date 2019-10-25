@@ -90,7 +90,7 @@ namespace Capstone.DAL
                         while (reader.Read())
                         {
                             Venue result = ConvertReaderToVenue(reader);
-                            vnu = result; 
+                            vnu = result;
 
                         }
 
