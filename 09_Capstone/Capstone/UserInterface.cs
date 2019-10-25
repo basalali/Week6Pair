@@ -17,6 +17,7 @@ namespace Capstone
 
         private SpaceSqlDAL spaceDAL;
         private VenueSqlDAL venueDAL;
+        private CategorySqlDAL categoryDAL;
         public UserInterface()
             {
      
@@ -28,7 +29,7 @@ namespace Capstone
           
             this.spaceDAL = new SpaceSqlDAL(connectionString);
             this.venueDAL = new VenueSqlDAL(connectionString);
-            //CategorySqlDAL categoryDAL = new CategorySqlDAL(connectionString);
+            this.categoryDAL = new CategorySqlDAL(connectionString);
             //ReservationSqlDAL reservationDAL = new ReservationSqlDAL(connectionString)
 
         }
@@ -104,17 +105,22 @@ namespace Capstone
         {
             selection = Convert.ToInt32(UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search: "));
             Console.WriteLine();
-            // Category catergory =  .GetCatergoyName 
+            //List<Category> categories = categoryDAL.getCategoryInfo();
             // Space 
 
+            //foreach(Category cat in categories)
+            //{
+            //    Console.WriteLine(cat);
+            //}
             if (selection >= 1 && selection <= 15)
             {
                 Venue venue = venueDAL.GetVenueDetails(selection);
+                Category categories = categoryDAL.GetCategories(selection);
 
-                    Console.WriteLine(venue.name.PadRight(15));
+                Console.WriteLine(venue.name.PadRight(15));
                     Console.WriteLine();
                     Console.WriteLine("Location: " ); 
-                    Console.WriteLine("Categories: " );
+                    Console.WriteLine("Categories: " + categories.category_name);
                     Console.WriteLine();
                     Console.WriteLine(venue.description);
                     Console.WriteLine();

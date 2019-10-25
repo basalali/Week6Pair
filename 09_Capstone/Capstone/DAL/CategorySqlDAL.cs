@@ -9,43 +9,59 @@ namespace Capstone.DAL
     public class CategorySqlDAL
     {
         private string connectionString;
-        private string sql_GetCategoryContents = "SELECT * FROM category";
+        private string sql_GetCategoryById = "SELECT * FROM category_venue cv JOIN venue ON cv.category_id = venue.id JOIN category c ON c.id = cv.category_id WHERE venue_id = @venue_id";
 
         public CategorySqlDAL(string databaseconnectionString)
         {
             connectionString = databaseconnectionString;
         }
 
-        public List<Category> getCategoryInfo()
+        
+        private Category ConvertReaderToCategory(SqlDataReader reader)
         {
-            List<Category> categories = new List<Category>();
+            Category cat = new Category();
+
+            cat.category_name = Convert.ToString(reader["name"]);
+            cat.id = Convert.ToInt32(reader["id"]);
+
+            return cat;
+        }
+
+        public Category GetCategories(int id)
+        {
+            Category cat = new Category();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(sql_GetCategoryContents, conn))
+                    using (SqlCommand cmd = new SqlCommand(sql_GetCategoryById, conn))
                     {
+                        cmd.Parameters.AddWithValue("@venue_id", id);
+
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Category category = new Category();
-                            category.id = Convert.ToInt32(reader["id"]);
-                            category.category_name = Convert.ToString(reader["name"]);
+                            Category result = ConvertReaderToCategory(reader);
+                            cat = result;
 
-                            categories.Add(category);
                         }
+
                     }
+                    return cat;
                 }
             }
-            catch
-            {
-                categories = new List<Category>();
-            }
-            return categories;
 
+            catch(SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                cat = new Category();
+            }
+
+            return cat;
         }
+
 
     }
 }
