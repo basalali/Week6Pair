@@ -18,6 +18,7 @@ namespace Capstone
         private SpaceSqlDAL spaceDAL;
         private VenueSqlDAL venueDAL;
         private CategorySqlDAL categoryDAL;
+        private ReservationSqlDAL reservationDAL;
         public UserInterface()
             {
      
@@ -30,7 +31,7 @@ namespace Capstone
             this.spaceDAL = new SpaceSqlDAL(connectionString);
             this.venueDAL = new VenueSqlDAL(connectionString);
             this.categoryDAL = new CategorySqlDAL(connectionString);
-            //ReservationSqlDAL reservationDAL = new ReservationSqlDAL(connectionString)
+            this.reservationDAL = new ReservationSqlDAL(connectionString);
 
         }
 

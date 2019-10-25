@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Capstone.Models
 {
-    class Reservation
+    public class Reservation
     {
         public int reservationId { get; set; }
         public int spaceId { get; set; }
@@ -12,6 +12,7 @@ namespace Capstone.Models
         public int startDate { get; set; }
         public int endDate { get; set; }
         public string reservedFor { get; set; }
+        public double totalCost { get; set; }
 
     }
 }

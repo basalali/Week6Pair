@@ -29,6 +29,7 @@ namespace Capstone.Tests
             categoryId = (int)cmd.ExecuteScalar();
             connection.Close();
 
+            cmd = new SqlCommand("SELECT * FROM category_venue cv JOIN venue ON cv.category_id = venue.id JOIN category c ON c.id = cv.category_id WHERE venue_id = @venue_id", connection);
         }
 
         [TestCleanup]
@@ -51,10 +52,10 @@ namespace Capstone.Tests
         }
 
         [TestMethod]
-        public void Search_Category_By_Venue_ID_Test()
+        public void Search_Category_By_ID_Test()
         {
             CategorySqlDAL getCategoryName = new CategorySqlDAL(ConnectionString);
-            List<Category> searchTest = getCategoryName.getCategoryInfo();
+            List<Category> searchTest = getCategoryName.GetCategories();
 
             CollectionAssert.AllItemsAreNotNull(searchTest);
             Assert.AreEqual(1, searchTest.Count);
