@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Capstone.Models
 {
-    class State
+    public class State
     {
        // public string abbrev;
 

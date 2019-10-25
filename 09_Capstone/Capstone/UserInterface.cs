@@ -18,6 +18,7 @@ namespace Capstone
         private SpaceSqlDAL spaceDAL;
         private VenueSqlDAL venueDAL;
         private CategorySqlDAL categoryDAL;
+        private CitySqlDAL cityDAL;
         public UserInterface()
             {
      
@@ -30,6 +31,7 @@ namespace Capstone
             this.spaceDAL = new SpaceSqlDAL(connectionString);
             this.venueDAL = new VenueSqlDAL(connectionString);
             this.categoryDAL = new CategorySqlDAL(connectionString);
+            this.cityDAL = new CitySqlDAL(connectionString);
             //ReservationSqlDAL reservationDAL = new ReservationSqlDAL(connectionString)
 
         }
@@ -105,22 +107,20 @@ namespace Capstone
         {
             selection = Convert.ToInt32(UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search: "));
             Console.WriteLine();
-            //List<Category> categories = categoryDAL.getCategoryInfo();
-            // Space 
+            
 
-            //foreach(Category cat in categories)
-            //{
-            //    Console.WriteLine(cat);
-            //}
             if (selection >= 1 && selection <= 15)
             {
                 Venue venue = venueDAL.GetVenueDetails(selection);
-                Category categories = categoryDAL.GetCategories(selection);
 
-                Console.WriteLine(venue.name.PadRight(15));
+                    Console.WriteLine(venue.name.PadRight(15));
                     Console.WriteLine();
-                    Console.WriteLine("Location: " ); 
-                    Console.WriteLine("Categories: " + categories.category_name);
+                    Console.Write("Location: ");
+                    GetCityAndStateAbbrev(selection);
+                    Console.WriteLine();
+                    Console.Write("Category: ");
+                    GetCategory(selection);
+                    Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine(venue.description);
                     Console.WriteLine();
@@ -136,8 +136,46 @@ namespace Capstone
                 Console.WriteLine("**** NO RESULTS ****");
             }
 
+        }
+
+        private void GetCategory(int selection) // gets list of all venue names
+        {
+            List<Category> categories = categoryDAL.GetCategories(selection);
+
+            if (categories.Count > 0)
+            {
+                foreach (Category cat in categories)
+                {
+                    Console.Write(cat.category_name + ", " );
+
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("No result! Please try again.");
+                return;
+            }
+        }
+
+        private void GetCityAndStateAbbrev(int selection)
+        {
+            List<City> cityState = cityDAL.GetCityState(selection);
+            
+            if(cityState.Count > 0)
+            {
+                foreach (City item in cityState)
+                {
+                    Console.Write(item.cityName + ", " + item.stateAbreviation);
+
+                }
+
+            }
+
 
         }
+
+
     }
 
 

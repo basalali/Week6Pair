@@ -9,7 +9,7 @@ namespace Capstone.DAL
     public class CategorySqlDAL
     {
         private string connectionString;
-        private string sql_GetCategoryById = "SELECT * FROM category_venue cv JOIN venue ON cv.category_id = venue.id JOIN category c ON c.id = cv.category_id WHERE venue_id = @venue_id";
+        private string sql_GetCategoryById = "SELECT c.name FROM category_venue cv JOIN venue ON cv.venue_id = venue.id JOIN category c ON c.id = cv.category_id WHERE venue_id = @venue_id";
 
         public CategorySqlDAL(string databaseconnectionString)
         {
@@ -22,14 +22,13 @@ namespace Capstone.DAL
             Category cat = new Category();
 
             cat.category_name = Convert.ToString(reader["name"]);
-            cat.id = Convert.ToInt32(reader["id"]);
 
             return cat;
         }
 
-        public Category GetCategories(int id)
+        public List<Category> GetCategories(int id)
         {
-            Category cat = new Category();
+            List<Category> cat = new List<Category>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -44,7 +43,7 @@ namespace Capstone.DAL
                         while (reader.Read())
                         {
                             Category result = ConvertReaderToCategory(reader);
-                            cat = result;
+                            cat.Add(result);
 
                         }
 
@@ -56,7 +55,7 @@ namespace Capstone.DAL
             catch(SqlException e)
             {
                 Console.WriteLine(e.Message);
-                cat = new Category();
+                cat = new List<Category>();
             }
 
             return cat;
