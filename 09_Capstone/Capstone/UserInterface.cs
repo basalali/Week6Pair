@@ -56,7 +56,7 @@ namespace Capstone
                         Console.ReadLine();
                         break;
                     case "3":
-                      Console.WriteLine("Thank you for using the Excelsior Venues system");
+                      Console.WriteLine("Thank you for using the Excelsior Venues systems");
                       return;
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
