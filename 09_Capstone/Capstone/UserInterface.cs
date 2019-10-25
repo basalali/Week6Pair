@@ -54,11 +54,16 @@ namespace Capstone
                         GetVenueDetails(); // pressing 2 will list the details of that venue -- searching by ID.
                         Console.ReadLine();
                         break;
+
                     case Command_Quit:
                         Console.WriteLine("Thank you for using the venue system");
                         return;
                     case Command_PreviousMenu:
-                        return;
+
+                    case "3":
+                      Console.WriteLine("Thank you for using the Excelsior Venues systems");
+                      return;
+
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
                         break;
