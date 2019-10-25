@@ -9,7 +9,7 @@ using Capstone.Models;
 namespace Capstone.Tests
 {
     [TestClass]
-    public class VenueTestsSqlDAL
+    public class VenueSqlDAL_Test
     {
         private string ConnectionString { get; } = "Data Source=.\\sqlexpress;Initial Catalog=excelsior_venues;Integrated Security=True";
         private int venueName = 0;
@@ -47,7 +47,7 @@ namespace Capstone.Tests
 
             //assert
             Assert.IsNotNull(venuename);
-            Assert.AreEqual(venueName + 1, venuename.Count);
+            Assert.AreEqual(venueName, venuename.Count);
         }
     }
 }
