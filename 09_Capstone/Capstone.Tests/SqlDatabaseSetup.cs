@@ -8,18 +8,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Capstone.Tests
 {
-    [TestClass()]
-    public class SqlDatabaseSetup
-    {
+    //[TestClass()]
+    //public class SqlDatabaseSetup
+    //{
 
-        [AssemblyInitialize()]
-        public static void InitializeAssembly(TestContext ctx)
-        {
-            // Setup the test database based on setting in the
-            // configuration file
-            SqlDatabaseTestClass.TestService.DeployDatabaseProject();
-            SqlDatabaseTestClass.TestService.GenerateData();
-        }
+    //    [Initialize]
+    //    public static void InitializeAssembly(TestContext ctx)
+    //    {
+    //        // Setup the test database based on setting in the
+    //        // configuration file
+    //        SqlDatabaseTestClass.TestService.DeployDatabaseProject();
+    //        SqlDatabaseTestClass.TestService.GenerateData();
+    //    }
 
-    }
+    //}
 }
