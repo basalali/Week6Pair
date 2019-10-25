@@ -8,30 +8,30 @@ using System.Data.SqlClient;
 
 namespace Capstone.DAL
 {
-    public class VenueSqlDAL : IVenueDAO
+    public class VenueSqlDAL
     {
 
         //get all venues provided a space_id
-
+        //venue.name, city.name, abbreviation, category.name, description
         private string connectionString;
         private string sql_GetVenueName = "SELECT * FROM venue";
-        private string sql_GetVenueDetails = "SELECT venue.name, city.name, abbreviation, category.name, description FROM venue" +
+        private string sql_GetVenueDetails = "SELECT * FROM venue" +
             "JOIN city ON city.id = venue.city_id" +
             "JOIN state ON state.abbreviation = city.state_abbreviation" +
             "JOIN category_venue ON category_venue.venue_id = venue.id" +
             "JOIN category ON category.id = category_venue.category_id " +
-            "WHERE venue_id = @id";
+            "WHERE venue_id = @venue_id ";
 
-      
+
         public VenueSqlDAL(string databaseconnectionString)
         {
             connectionString = databaseconnectionString;
         }
 
         //returns list of venue names
-        public IList<Venue> GetVenueName()
+        public List<Venue> GetVenueName()
         {
-            IList<Venue> venues = new List<Venue>();
+            List<Venue> venues = new List<Venue>();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
@@ -45,16 +45,16 @@ namespace Capstone.DAL
                         while (reader.Read())
                         {
                             Venue venue = ConvertReaderToVenue(reader);
-                     
+
                             venues.Add(venue);
                         }
-                        
+
                     }
                     return venues;
 
                 }
             }
-            catch(SqlException)
+            catch (SqlException)
             {
                 venues = new List<Venue>();
             }
@@ -73,76 +73,41 @@ namespace Capstone.DAL
             return vnu;
         }
 
-        //public IList<Venue> GetVenueDetails(int id)
-        //{
-        //    IList<Venue> venues = new List<Venue>();
-
-        //    try
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(connectionString))
-        //        {
-        //            conn.Open();
-        //            // column    // param name  
-        //            SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn);                  
-                    
-        //            // param name    // param value
-        //            cmd.Parameters.AddWithValue("@venue_id", id);
-
-        //            SqlDataReader reader = cmd.ExecuteReader();
-
-        //            while (reader.Read())
-        //            {
-        //                Venue vnu = ConvertReaderToVenue(reader);
-        //                venues.Add(vnu);
-        //            }
-
-        //            return venues;
-        //        }
-        //    }
-        //    catch (SqlException ex)
-        //    {
-        //        Console.WriteLine("An error occurred reading venues by ID.");
-        //        Console.WriteLine(ex.Message);
-        //        throw;
-        //    }
-
-            public IList<Venue> GetVenueDetails(int id)
+        public Venue GetVenueDetails(int id)
+        {
+            Venue vnu = new Venue();
+            try
             {
-                IList<Venue> venueDetails = new List<Venue>();
-                try
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn))
                     {
-                        conn.Open();
+                        //cmd.Parameters.AddWithValue("@id", id);
 
-                        using (SqlCommand cmd = new SqlCommand(sql_GetVenueDetails, conn))
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
                         {
-                            cmd.Parameters.AddWithValue("@id", id);
-                         
-                            SqlDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                Venue vnu = new Venue();
-                            vnu.venue_id = Convert.ToInt32(reader["id"]);
-                            vnu.name = Convert.ToString(reader["name"]);
-                            vnu.cityId = Convert.ToInt32(reader["city_id"]);
-                            vnu.description = Convert.ToString(reader["description"]);
+                            Venue result = ConvertReaderToVenue(reader);
+                            vnu = result; 
 
-                           venueDetails.Add(vnu);
-                            }
-                            return venueDetails;
                         }
+
                     }
+                    return vnu;
                 }
-
-                catch
-                {
-                    venueDetails= new List<Venue>();
-                }
-
-                return venueDetails;
             }
 
-        
+            catch
+            {
+                vnu = new Venue();
+            }
+
+            return vnu;
+        }
+
+       // private Venue GetVenueDetails(int id); 
+
     }
 }

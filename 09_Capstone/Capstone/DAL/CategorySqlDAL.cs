@@ -16,6 +16,7 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
+<<<<<<< HEAD
         public List<Category> getCategoryInfo()
         {
             List<Category> categories = new List<Category>();
@@ -46,5 +47,8 @@ namespace Capstone.DAL
             return categories;
 
         }
+=======
+       //public void GetCatergoryName()
+>>>>>>> 1f2c9a7f5bc94c1798f59183232517dfe26bad57
     }
 }
