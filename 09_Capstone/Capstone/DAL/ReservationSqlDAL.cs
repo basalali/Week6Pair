@@ -8,6 +8,8 @@ namespace Capstone.DAL
     {
         private string connectionString;
         private int venue_id = 1;
+        private string sql_GetVenueId = "SELECT * FROM space WHERE venue_id = '???'";
+        private string sql_GetSpaceId = "SELECT * FROM reservation WHERE space_id <= 7";
 
         public ReservationSqlDAL(string databaseconnectionString)
         {
