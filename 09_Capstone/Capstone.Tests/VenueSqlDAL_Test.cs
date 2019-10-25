@@ -43,11 +43,14 @@ namespace Capstone.Tests
         {
             //arrange
             VenueSqlDAL venueSql = new VenueSqlDAL(ConnectionString);
-            IList<Venue> venuename = venueSql.GetVenueName();
+            List<Venue> venuename = venueSql.GetVenueName();
 
             //assert
             Assert.IsNotNull(venuename);
             Assert.AreEqual(venueName, venuename.Count);
         }
+
     }
+
+    
 }

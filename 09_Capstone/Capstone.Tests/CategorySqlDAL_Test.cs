@@ -43,11 +43,22 @@ namespace Capstone.Tests
         {
             //arrange
             CategorySqlDAL categorySql = new CategorySqlDAL(ConnectionString);
-            IList<Category> categoryList = categorySql.getCategoryInfo();
+            List<Category> categoryList = categorySql.getCategoryInfo();
 
             //assert
             Assert.IsNotNull(categoryList);
             Assert.AreEqual(categoryId, categoryList.Count);
+        }
+
+        [TestMethod]
+        public void Search_Category_By_Venue_ID_Test()
+        {
+            CategorySqlDAL getCategoryName = new CategorySqlDAL(ConnectionString);
+            List<Category> searchTest = getCategoryName.getCategoryInfo();
+
+            CollectionAssert.AllItemsAreNotNull(searchTest);
+            Assert.AreEqual(1, searchTest.Count);
+            Equals("Tragedy Is Assured", searchTest[0].category_name);
         }
     }
 }
