@@ -28,28 +28,23 @@ namespace Capstone
 
         }
 
-
         public UserInterface(string connectionString)
         {
-
             this.spaceDAL = new SpaceSqlDAL(connectionString);
             this.venueDAL = new VenueSqlDAL(connectionString);
             this.categoryDAL = new CategorySqlDAL(connectionString);
             this.reservationDAL = new ReservationSqlDAL(connectionString);
 
             this.cityDAL = new CitySqlDAL(connectionString);
-
         }
-
         public void RunInterface()
         {
             Console.WriteLine("Welcome to Excelsior Venues, please hit enter to continue!");
 
-            string initialSelection = Console.ReadLine();
+            string initialSelection = "";
             Console.WriteLine();
 
-
-            while (initialSelection != "4")
+            while (initialSelection != "6")
             {
                 PrintHeader();
                 initialSelection = Console.ReadLine();
@@ -58,21 +53,36 @@ namespace Capstone
                 {
                     case "1":
                         GetVenueName(); // this method gets the names of all venues
-                        Console.ReadLine();
+                        Console.WriteLine();
                         break;
                     case "2":
                         GetVenueDetails(); // this will list the details of that venue -- searching by ID.
-                        Console.ReadLine();
+                        Console.WriteLine();
                         break;
                     case "3":
-                        GetSpaces(selection);
-                        Console.WriteLine("Thank you for using the Excelsior Venues systems");
-                        return;
+                        GetSpaces(); // view spaces by ID.
+                        Console.WriteLine();
+                        break;
+                    case "4":
+                        // search for availability -- only requires the desired space, a start date, and an end date
+                        //  a space is unavailable if any part of their preferred date range overlaops with an existing reservation
+                        // if no spaces are available, indicate to user that are no available spaces and ask them if they would like to try a different search,
+                        // if they say yes, restart the search dialog.
+                        Console.WriteLine();
+                        break;
+                    case "5":
+                        // Reserve a space -- a space requires the name of the person or group reserving the sapce, a start and end date
+                        //What is the name of the person or group reserving this space?
+                        //how many days will you need the space
+                        //how many people will be in attendance?
+                        // confirmation ID:
+                        Console.WriteLine();
+                        break;
+                    case "6":
+                        break;
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
                         break;
-
-
                 }
             }
         }
@@ -82,39 +92,18 @@ namespace Capstone
             Console.WriteLine("What would you like to do?");
             Console.WriteLine();
             Console.WriteLine("1) List Venues");
-            Console.WriteLine("2) Get Details of Venue");
-            Console.WriteLine("3) Quit");
+            Console.WriteLine("2) Venue Details");
+            Console.WriteLine("3) View Spaces for a Specific Venue");
+            Console.WriteLine("4) Search for Reservation");
+            Console.WriteLine("5) Reserve a Space");
+            Console.WriteLine("6) Quit");
         }
 
         private void ListVenueSpacesHeader()
         {
             Console.WriteLine(String.Format("{0, -10} {1, -15} {2, -15} {3, -15} {4, -15} {5, -15}", "Space #", "Name", "Open", "Close", "Daily Rate", "Max. Occupancy"));
         }
-
-        public void SpacesInterface()
-        {
-            string spacesSelection = "";
-            while (spacesSelection != "3")
-            ListVenueSpacesHeader();
-            {
-                switch (spacesSelection)
-                {
-                    case "1":
-                        //GetSpace();
-                        break;
-                    case "2":
-                        // Search for Reservation
-                        break;
-                    case "3":
-                        // Return to Previous screen
-                        break;
-                    default:
-                        Console.WriteLine("The command provided was not a valid command, please try again.");
-                        break;
-
-                }
-            }        
-        }
+        
         private void GetVenueName() // gets list of all venue names
         {
             List<Venue> venues = venueDAL.GetVenueName();
@@ -125,10 +114,9 @@ namespace Capstone
                 foreach (Venue ven in venues)
                 {
                     Console.WriteLine(ven.venue_id.ToString() + ") " + ven.name);
-
                 }
-                Console.WriteLine("16) *****Return to previous window*****");
-
+                Console.WriteLine();
+                Console.WriteLine(" *****Please press enter to continue*****");
             }
             else
             {
@@ -145,8 +133,8 @@ namespace Capstone
 
             if (selection <= 15 && selection >= 0)
             {
-             
-                Console.WriteLine(venue.name.ToString());
+
+                Console.WriteLine(venue.name);
                 Console.WriteLine();
                 Console.Write("Location: ");
                 GetCityAndStateAbbrev(selection);
@@ -158,10 +146,7 @@ namespace Capstone
                 Console.WriteLine(venue.description);
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine("What would you like to do next ?");
-                Console.WriteLine("1) View Spaces");
-                Console.WriteLine("2  Search for Reservation");
-                Console.WriteLine("3) Return to Previous Screen");
+
 
             }
             else
@@ -190,43 +175,37 @@ namespace Capstone
                 return;
             }
         }
-
         private void GetCityAndStateAbbrev(int selection)
         {
             List<City> cityState = cityDAL.GetCityState(selection);
-
             if (cityState.Count > 0)
             {
                 foreach (City item in cityState)
                 {
                     Console.Write(item.cityName + ", " + item.stateAbreviation);
-
                 }
-
             }
         }
-
-        private void GetSpaces(int selection)
+        private void GetSpaces()
         {
-            List<Space> spaces = spaceDAL.GetSpaceDetails(selection);
-            selection = Convert.ToInt32(UserInterfaceHelper.GetInteger("Enter the ID of the venue you want to search: "));
+            selection = Convert.ToInt32(UserInterfaceHelper.GetInteger("Enter the ID of the venue to view spaces available: "));
             Console.WriteLine();
+            ListVenueSpacesHeader();
+            List<Space> spaces = spaceDAL.GetSpaceDetails(selection);
 
-            if (spaces.Count > 0)
+            if (selection > 0 && selection <= 15 && spaces.Count > 0)
             {
                 foreach(Space item in spaces)
                 {
-                    Console.WriteLine(String.Format("{0, -5} {1, -30} {2, -15} {3, -15} {4, -15}", item.name, item.openFrom, item.openTo, item.dailyRate, item.maxOccupancy));
+                    Console.WriteLine(item);
+                    /Console.WriteLine(String.Format("{0, -5} {1, -5} {2, -30} {3, -15} {4, -15} {5, -15}", item.id, item.name, item.openFrom, item.openTo, item.dailyRate, item.maxOccupancy));
                 }
             }
             else
             {
                 Console.WriteLine("*** NO RESULT ***");
             }
-
-
         }
-
     }
 }
 
