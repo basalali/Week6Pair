@@ -14,7 +14,7 @@ namespace Capstone.Models
 
         public bool isAccessbile { get; set; }
 
-        public int openFrom { get; set; }
+        public int openFrom { get; set; } 
 
         public int openTo { get; set; }
 

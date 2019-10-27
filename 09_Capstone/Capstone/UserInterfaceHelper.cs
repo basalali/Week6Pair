@@ -119,5 +119,66 @@ namespace Capstone
 
             return userInput;
         }
+
+        public static string ConvertIntToMonth(int date)
+        {
+            string input = string.Empty;
+
+            if (date == 1)
+            {
+                input = "Jan";
+            }
+            else if (date == 2)
+            {
+                input = "Feb";
+            }
+            else if (date == 3)
+            {
+                input = "Mar";
+            }
+            else if (date == 4)
+            {
+                input = "Apr";
+            }
+            else if (date == 5)
+            {
+                input = "May";
+            }
+            else if (date == 6)
+            {
+                input = "Jun";
+            }
+            else if (date == 7)
+            {
+                input = "July";
+            }
+            else if (date == 8)
+            {
+                input = "Aug";
+            }
+            else if (date == 9)
+            {
+                input = "Sep";
+            }
+            else if (date == 10)
+            {
+                input = "Oct";
+            }
+            else if (date == 11)
+            {
+                input = "Nov";
+            }
+            else if (date == 12)
+            {
+                input = "Dec";
+            }
+            else
+            {
+                input = "";
+            }
+
+
+            return input;
+        }
     }
 }

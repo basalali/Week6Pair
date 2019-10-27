@@ -71,7 +71,7 @@ namespace Capstone
                         Console.WriteLine();
                         break;
                     case "5":
-                        // Reserve a space -- a space requires the name of the person or group reserving the sapce, a start and end date
+                        // Reserve a space OR make a reservation -- a space requires the name of the person or group reserving the sapce, a start and end date
                         //What is the name of the person or group reserving this space?
                         //how many days will you need the space
                         //how many people will be in attendance?
@@ -101,7 +101,7 @@ namespace Capstone
 
         private void ListVenueSpacesHeader()
         {
-            Console.WriteLine(String.Format("{0, -10} {1, -15} {2, -15} {3, -15} {4, -15} {5, -15}", "Space #", "Name", "Open", "Close", "Daily Rate", "Max. Occupancy"));
+            Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15} {4, -15} {5, -15}", "Space #", "Name", "Open", "Close", "Daily Rate", "Max. Occupancy"));
         }
         
         private void GetVenueName() // gets list of all venue names
@@ -192,20 +192,23 @@ namespace Capstone
             Console.WriteLine();
             ListVenueSpacesHeader();
             List<Space> spaces = spaceDAL.GetSpaceDetails(selection);
-
-            if (selection > 0 && selection <= 15 && spaces.Count > 0)
-            {
+            if (selection > 0 && selection <= 15)
+            {               
                 foreach(Space item in spaces)
                 {
-                    Console.WriteLine(item);
-                    /Console.WriteLine(String.Format("{0, -5} {1, -5} {2, -30} {3, -15} {4, -15} {5, -15}", item.id, item.name, item.openFrom, item.openTo, item.dailyRate, item.maxOccupancy));
+                    string date1 = UserInterfaceHelper.ConvertIntToMonth(item.openFrom);
+                    string date2 = UserInterfaceHelper.ConvertIntToMonth(item.openTo);
+                    
+                    Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15} {4, -15} {5, -15}", item.id, item.name, date1, date2, item.dailyRate, item.maxOccupancy));
                 }
             }
             else
             {
-                Console.WriteLine("*** NO RESULT ***");
+                Console.WriteLine();
+                Console.WriteLine("No result, please try again!");
             }
         }
+
     }
 }
 

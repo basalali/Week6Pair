@@ -12,9 +12,9 @@ namespace Capstone.DAL
     public class ReservationSqlDAL
     {
         private string connectionString;
-        private int venue_id = 1;
-        private string sql_GetVenueId = "SELECT * FROM space WHERE venue_id = '???'";
-        private string sql_GetSpaceId = "SELECT * FROM reservation WHERE space_id <= 7 ";
+
+
+        private string sql_MakeReservation = "INSERT into reservation ()";
         private string sql_GetAvailableSpaces = "SELECT* FROM space s WHERE venue_id = @venue_id AND s.id NOT IN " +
             "(SELECT s.id from reservation r JOIN space s on r.space_id = s.id WHERE s.venue_id= @venue_id " +
             "AND r.end_date >= @req_from_date AND r.start_date <= @req_to_date ";
@@ -24,7 +24,7 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
-        public List<Reservation> Reservation()
+        public List<Reservation> MakeReservation()
         {
             List<Reservation> reservations = new List<Reservation>();
             try
