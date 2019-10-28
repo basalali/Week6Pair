@@ -11,6 +11,8 @@ namespace Capstone.Tests
     [TestClass]
     public class CategorySqlDAL_Test
     {
+        private int id = 0;
+
         private string ConnectionString { get; } = "Data Source=.\\sqlexpress;Initial Catalog=excelsior_venues;Integrated Security=True";
         private int categoryId = 0;
 
@@ -44,7 +46,7 @@ namespace Capstone.Tests
         {
             //arrange
             CategorySqlDAL categorySql = new CategorySqlDAL(ConnectionString);
-            List<Category> categoryList = categorySql.getCategoryInfo();
+            List<Category> categoryList = categorySql.GetCategories(id);
 
             //assert
             Assert.IsNotNull(categoryList);
@@ -55,7 +57,7 @@ namespace Capstone.Tests
         public void Search_Category_By_ID_Test()
         {
             CategorySqlDAL getCategoryName = new CategorySqlDAL(ConnectionString);
-            List<Category> searchTest = getCategoryName.GetCategories();
+            List<Category> searchTest = getCategoryName.GetCategories(id);
 
             CollectionAssert.AllItemsAreNotNull(searchTest);
             Assert.AreEqual(1, searchTest.Count);
