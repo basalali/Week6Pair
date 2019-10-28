@@ -106,14 +106,15 @@ namespace Capstone
         
         private void GetVenueName() // gets list of all venue names
         {
+            Console.WriteLine();
             List<Venue> venues = venueDAL.GetVenueName();
-            Console.WriteLine("List Of All Venues");
+            Console.WriteLine(String.Format("{0, -10} {1, -10}", "ID", "Venue Name"));
             Console.WriteLine();
             if (venues.Count > 0)
             {
                 foreach (Venue ven in venues)
                 {
-                    Console.WriteLine(ven.venue_id.ToString() + ") " + ven.name);
+                    Console.WriteLine(String.Format("{0, -10} {1, -10}", ven.venue_id, ven.name));
                 }
                 Console.WriteLine();
                 Console.WriteLine(" *****Please press enter to continue*****");

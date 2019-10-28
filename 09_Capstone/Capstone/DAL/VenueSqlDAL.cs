@@ -14,7 +14,7 @@ namespace Capstone.DAL
         //get all venues provided a space_id
         //venue.name, city.name, abbreviation, category.name, description
         private string connectionString;
-        private string sql_GetVenueName = "SELECT * FROM venue";
+        private string sql_GetVenueName = "SELECT id, name FROM venue group by name, id order by name";
         private string sql_GetVenueDetails = "SELECT * FROM venue " +
             "JOIN city ON city.id = venue.city_id " +
             "JOIN state ON state.abbreviation = city.state_abbreviation " +
@@ -44,8 +44,12 @@ namespace Capstone.DAL
                         SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            Venue venue = ConvertReaderToVenue(reader);
+                            Venue venue = new Venue();
 
+                            venue.venue_id = Convert.ToInt32(reader["id"]);
+                            venue.name = Convert.ToString(reader["name"]);
+                            //venue.cityId = Convert.ToInt32(reader["city_id"]);
+                            //venue.description = Convert.ToString(reader["description"]);
                             venues.Add(venue);
                         }
 
