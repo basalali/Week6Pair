@@ -9,10 +9,11 @@ namespace Capstone.Models
         public int reservationId { get; set; }
         public int spaceId { get; set; }
         public int numberOfAttendees { get; set; }
-        public int startDate { get; set; }
-        public int endDate { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
         public string reservedFor { get; set; }
         public double totalCost { get; set; }
+        public int howManyDays { get; set; }
 
         //public int Space_Id { get; set; }
 

@@ -71,12 +71,13 @@ namespace Capstone
                         Console.WriteLine();
                         break;
                     case "5":
+                        MakeReservation();
+                        Console.WriteLine();
                         // Reserve a space OR make a reservation -- a space requires the name of the person or group reserving the sapce, a start and end date
                         //What is the name of the person or group reserving this space?
                         //how many days will you need the space
                         //how many people will be in attendance?
                         // confirmation ID:
-                        Console.WriteLine();
                         break;
                     case "6":
                         break;
@@ -207,6 +208,40 @@ namespace Capstone
             {
                 Console.WriteLine();
                 Console.WriteLine("No result, please try again!");
+            }
+        }
+
+        private void MakeReservation()
+        {
+            //When do you need the space ? 9 / 29 / 2019
+            //How many days will you need the space ? 5
+            //How many people will be in attendance ? 100
+            int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the space you would like to reserve:");
+            Console.WriteLine();
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? ");
+            Console.WriteLine();
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? ");
+            Console.WriteLine();
+            string reserved_for = CLIHelper.GetString("Please enter the name of person or group reserving the space: ");
+            Console.WriteLine();
+            Reservation newRes = new Reservation
+            {
+                spaceId = resSpaceId,
+                startDate = startDates,
+                endDate= endDates,
+                reservedFor = reserved_for
+            };
+
+            int dal = reservationDAL.MakeReservation(resSpaceId, startDates, endDates, reserved_for);
+            if (reserved_for != null)
+            {
+                Console.WriteLine(String.Format("{0, -15}", " **** SUCCESS ***"));
+
+
+            }
+            else
+            {
+                Console.WriteLine("*** DID NOT CREATE ***");
             }
         }
 
