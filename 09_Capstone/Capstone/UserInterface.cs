@@ -233,11 +233,11 @@ namespace Capstone
             if (dal > 0)
             {
                 Space space = spaceDAL.GetASpaceName(resSpaceId);
-
+                Venue venue = venueDAL.GetVenueNameGivenSpaceId(resSpaceId);
                 Console.WriteLine(String.Format("{0, -15}", "Thanks for submitting your reservation! The details for your event are listed below: "));
                     Console.WriteLine();
                     Console.WriteLine("Confirmation #: " + RandomString(resSpaceId));
-                    //Venue Name
+                    Console.WriteLine("Venue: " + venue.name);
                     Console.WriteLine("Space: " + space.name);
                     Console.WriteLine("Reserved For: " + reserved_for);
                     Console.WriteLine("Attendees: " + numOfPeople);
@@ -256,9 +256,9 @@ namespace Capstone
         {
             int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the venue you would like to reserve:");
             Console.WriteLine();
-            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (YYYY/MM/DD)");
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (DD/MM/YYYY)");
             Console.WriteLine();
-            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (YYYY/MM/DD)");
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (DD/MM/YYYY)");
             Console.WriteLine();
 
 

@@ -14,6 +14,7 @@ namespace Capstone.DAL
    
 
         private string connectionString;
+        
         private string sql_GetSpaces = "SELECT * from space WHERE venue_id = @venue_id;";
         private string sql_GetASingleSpace = "SELECT * from space WHERE space.id = @id; ";
         private string sql_GetAvailableSpaces = "SELECT* FROM space s WHERE venue_id = @venue_id AND s.id NOT IN " +
@@ -131,7 +132,6 @@ namespace Capstone.DAL
 
             return spaces;
         }
-
         private Space ConvertReaderToSpaces(SqlDataReader reader)
         {
             Space space = new Space();
