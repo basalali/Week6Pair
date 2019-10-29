@@ -14,6 +14,7 @@ namespace Capstone.DAL
         //get all venues provided a space_id
         //venue.name, city.name, abbreviation, category.name, description
         private string connectionString;
+        private string sql_GetAvenueGivenSpaceID = "select * from venue JOIN space ON venue.id = space.venue_id WHERE space.id =@id ";
         private string sql_GetVenueName = "SELECT id, name FROM venue group by name, id order by name";
         private string sql_GetVenueDetails = "SELECT * FROM venue " +
             "JOIN city ON city.id = venue.city_id " +
@@ -111,7 +112,39 @@ namespace Capstone.DAL
             return vnu;
         }
 
+        public Venue GetVenueNameGivenSpaceId(int id)
+        {
+            Venue vnu = new Venue();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
 
+                    using (SqlCommand cmd = new SqlCommand(sql_GetAvenueGivenSpaceID, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            Venue result = ConvertReaderToVenue(reader);
+                            vnu = result;
+
+                        }
+
+                    }
+                    return vnu;
+                }
+            }
+
+            catch
+            {
+                vnu = new Venue();
+            }
+
+            return vnu;
+        }
 
     }
 }
