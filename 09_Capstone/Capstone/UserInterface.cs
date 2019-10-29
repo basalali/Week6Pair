@@ -213,9 +213,9 @@ namespace Capstone
 
             int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the space you would like to reserve:");
             Console.WriteLine();
-            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (MM/DD/YYYY)");
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (YYYY/MM/DD)");
             Console.WriteLine();
-            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (MM/DD/YYYY)");
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (YYYY/MM/DD)");
             Console.WriteLine();
             int numOfPeople = CLIHelper.GetInteger("How many people will be in attendance? ");
             Console.WriteLine();
@@ -254,29 +254,25 @@ namespace Capstone
 
         private void CheckAvailableSpaces()
         {
-            int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the space you would like to reserve:");
+            int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the venue you would like to reserve:");
             Console.WriteLine();
-            int startDate = CLIHelper.GetInteger("What month would you like to make this reservation ? (ex.Jan = 1, Dec = 12)");
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (YYYY/MM/DD)");
             Console.WriteLine();
-            
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (YYYY/MM/DD)");
+            Console.WriteLine();
 
-            List<Space> spaces = spaceDAL.CheckAvailableSpaces(resSpaceId, startDate);
+
+            List<Space> spaces = spaceDAL.CheckAvailableSpaces(resSpaceId, startDates, endDates);
 
             if (spaces.Count > 0)
             { Console.WriteLine("The following spaces are available based on your needs: ");
                 Console.WriteLine();
                 Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", "Space #", "Name", "Daily Rate", "Max. Occupancy"));
                 foreach (Space space in spaces)
-                {
-                    if(startDate != space.openFrom && space.openFrom > 0)
-                    {
-                        Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", space.id, space.name, space.dailyRate, space.maxOccupancy));
-                    }
-                    
-                    else
-                    {
-                        Console.WriteLine("Please try again!");
-                    }
+                { 
+          
+                 Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", space.id, space.name, space.dailyRate, space.maxOccupancy));
+        
                 }
             }
             else

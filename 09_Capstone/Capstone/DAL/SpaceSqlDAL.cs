@@ -144,7 +144,7 @@ namespace Capstone.DAL
             return space;
         }
 
-        public List<Space> CheckAvailableSpaces(int venId, int start)
+        public List<Space> CheckAvailableSpaces(int venId, DateTime start, DateTime end)
         {
             List<Space> searching = new List<Space>();
 
@@ -158,38 +158,25 @@ namespace Capstone.DAL
                    
                         cmd.Parameters.AddWithValue("@venue_id", venId);
                         cmd.Parameters.AddWithValue("@req_from_date", start);
+                        cmd.Parameters.AddWithValue("@req_to_date", end);
 
                         SqlDataReader reader = cmd.ExecuteReader();
 
                         while (reader.Read())
                         {
-                            if (reader["open_from"] != DBNull.Value)
+                            if (reader["open_from"]  == DBNull.Value)
                             {
                                 Space searcher = new Space();
                                 searcher.id = Convert.ToInt32(reader["id"]);
                                 searcher.venue_id = Convert.ToInt32(reader["venue_id"]);
                                 searcher.name = Convert.ToString(reader["name"]);
                                 searcher.isAccessbile = Convert.ToBoolean(reader["is_accessible"]);
-                                searcher.openFrom = Convert.ToInt32(reader["open_from"]);
-                                searcher.openTo = Convert.ToInt32(reader["open_to"]);
+                                //searcher.openFrom = Convert.ToInt32(reader["open_from"]);
+                                //searcher.openTo = Convert.ToInt32(reader["open_to"]);
                                 searcher.dailyRate = Convert.ToDouble(reader["daily_rate"]);
                                 searcher.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
 
                                 searching.Add(searcher);
-                            }
-
-                            else
-                            {
-                                Space searcher = new Space();
-                                searcher.id = Convert.ToInt32(reader["id"]);
-                                searcher.venue_id = Convert.ToInt32(reader["venue_id"]);
-                                searcher.name = Convert.ToString(reader["name"]);
-                                searcher.isAccessbile = Convert.ToBoolean(reader["is_accessible"]);
-                                searcher.dailyRate = Convert.ToDouble(reader["daily_rate"]);
-                                searcher.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
-
-                                searching.Add(searcher);
-
                             }
                         }
                         return searching;
