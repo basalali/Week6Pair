@@ -15,6 +15,10 @@ namespace Capstone.DAL
 
         private string connectionString;
         private string sql_GetSpaces = "SELECT * from space WHERE venue_id = @venue_id;";
+        private string sql_GetASingleSpace = "SELECT * from space WHERE space.id = @id; ";
+        private string sql_GetAvailableSpaces = "SELECT* FROM space s WHERE venue_id = @venue_id AND s.id NOT IN " +
+          "(SELECT s.id from reservation r JOIN space s on r.space_id = s.id WHERE s.venue_id= @venue_id " +
+          "AND r.end_date >= @req_from_date AND r.start_date <= @req_to_date )";
 
         /// <summary>
         /// Creates a new sql-based space DAL.
@@ -93,7 +97,105 @@ namespace Capstone.DAL
             return space;
         }
 
-  
+        public Space GetASpaceName(int id)
+        {
+            Space spaces = new Space();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(sql_GetASingleSpace, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            Space result = ConvertReaderToSpaces(reader);
+                            spaces = result;
+
+                        }
+
+                    }
+                    return spaces;
+                }
+            }
+
+            catch
+            {
+                spaces = new Space();
+            }
+
+            return spaces;
+        }
+
+        private Space ConvertReaderToSpaces(SqlDataReader reader)
+        {
+            Space space = new Space();
+
+            space.id = Convert.ToInt32(reader["id"]);
+            space.dailyRate = Convert.ToDouble(reader["daily_rate"]);
+            space.name = Convert.ToString(reader["name"]);
+
+
+            return space;
+        }
+
+        public List<Space> CheckAvailableSpaces(int venId, DateTime start, DateTime end)
+        {
+            List<Space> searching = new List<Space>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sql_GetAvailableSpaces, conn))
+                    {
+                   
+                        cmd.Parameters.AddWithValue("@venue_id", venId);
+                        cmd.Parameters.AddWithValue("@req_from_date", start);
+                        cmd.Parameters.AddWithValue("@req_to_date", end);
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            if (reader["open_from"]  == DBNull.Value)
+                            {
+                                Space searcher = new Space();
+                                searcher.id = Convert.ToInt32(reader["id"]);
+                                searcher.venue_id = Convert.ToInt32(reader["venue_id"]);
+                                searcher.name = Convert.ToString(reader["name"]);
+                                searcher.isAccessbile = Convert.ToBoolean(reader["is_accessible"]);
+                                //searcher.openFrom = Convert.ToInt32(reader["open_from"]);
+                                //searcher.openTo = Convert.ToInt32(reader["open_to"]);
+                                searcher.dailyRate = Convert.ToDouble(reader["daily_rate"]);
+                                searcher.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
+
+                                searching.Add(searcher);
+                            }
+                        }
+                        return searching;
+
+                    }
+
+                }
+
+            }
+
+            catch (SqlException)
+            {
+
+                searching = new List<Space>();
+
+            }
+            return searching;
+        }
+
 
     }
 }

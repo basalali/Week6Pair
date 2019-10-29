@@ -4,6 +4,7 @@ using System.Text;
 using Capstone;
 using Capstone.Models;
 using Capstone.DAL;
+using System.Linq;
 
 namespace Capstone
 {
@@ -64,20 +65,16 @@ namespace Capstone
                         Console.WriteLine();
                         break;
                     case "4":
+                        CheckAvailableSpaces();
+                        Console.WriteLine();
                         // search for availability -- only requires the desired space, a start date, and an end date
                         //  a space is unavailable if any part of their preferred date range overlaops with an existing reservation
                         // if no spaces are available, indicate to user that are no available spaces and ask them if they would like to try a different search,
                         // if they say yes, restart the search dialog.
-                        Console.WriteLine();
                         break;
                     case "5":
                         MakeReservation();
                         Console.WriteLine();
-                        // Reserve a space OR make a reservation -- a space requires the name of the person or group reserving the sapce, a start and end date
-                        //What is the name of the person or group reserving this space?
-                        //how many days will you need the space
-                        //how many people will be in attendance?
-                        // confirmation ID:
                         break;
                     case "6":
                         break;
@@ -213,16 +210,17 @@ namespace Capstone
 
         private void MakeReservation()
         {
-            //When do you need the space ? 9 / 29 / 2019
-            //How many days will you need the space ? 5
-            //How many people will be in attendance ? 100
+
             int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the space you would like to reserve:");
             Console.WriteLine();
-            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? ");
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (MM/DD/YYYY)");
             Console.WriteLine();
-            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? ");
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (MM/DD/YYYY)");
+            Console.WriteLine();
+            int numOfPeople = CLIHelper.GetInteger("How many people will be in attendance? ");
             Console.WriteLine();
             string reserved_for = CLIHelper.GetString("Please enter the name of person or group reserving the space: ");
+            Console.WriteLine();
             Console.WriteLine();
             Reservation newRes = new Reservation
             {
@@ -231,12 +229,21 @@ namespace Capstone
                 endDate= endDates,
                 reservedFor = reserved_for
             };
-
             int dal = reservationDAL.MakeReservation(resSpaceId, startDates, endDates, reserved_for);
-            if (reserved_for != null)
+            if (dal > 0)
             {
-                Console.WriteLine(String.Format("{0, -15}", " **** SUCCESS ***"));
+                Space space = spaceDAL.GetASpaceName(resSpaceId);
 
+                Console.WriteLine(String.Format("{0, -15}", "Thanks for submitting your reservation! The details for your event are listed below: "));
+                    Console.WriteLine();
+                    Console.WriteLine("Confirmation #: " + RandomString(resSpaceId));
+                    //Venue Name
+                    Console.WriteLine("Space: " + space.name);
+                    Console.WriteLine("Reserved For: " + reserved_for);
+                    Console.WriteLine("Attendees: " + numOfPeople);
+                    Console.WriteLine("Arrival Date: " + Convert.ToDateTime(startDates));
+                    Console.WriteLine("Departure Date: " + Convert.ToDateTime(endDates));
+                    Console.WriteLine("Total Cost: $" + space.dailyRate);
 
             }
             else
@@ -244,6 +251,49 @@ namespace Capstone
                 Console.WriteLine("*** DID NOT CREATE ***");
             }
         }
+
+        private void CheckAvailableSpaces()
+        {
+            int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the venue you would like to reserve:");
+            Console.WriteLine();
+            DateTime startDates = CLIHelper.GetDateTime("When do you need the space from ? (MM/DD/YYYY)");
+            Console.WriteLine();
+            DateTime endDates = CLIHelper.GetDateTime("When do you need the space until ? (MM/DD/YYYY)");
+            Console.WriteLine();
+
+
+            List<Space> spaces = spaceDAL.CheckAvailableSpaces(resSpaceId, startDates, endDates);
+
+            if (spaces.Count > 0)
+            { Console.WriteLine("The following spaces are available based on your needs: ");
+                Console.WriteLine();
+                Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", "Space #", "Name", "Daily Rate", "Max. Occupancy"));
+                foreach (Space space in spaces)
+                { 
+          
+                 Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", space.id, space.name, space.dailyRate, space.maxOccupancy));
+        
+                }
+            }
+            else
+            {
+                Console.WriteLine("**** NO RESULTS ****");
+            }
+
+
+        }
+
+
+        public static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            length = 10;
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+
 
     }
 }

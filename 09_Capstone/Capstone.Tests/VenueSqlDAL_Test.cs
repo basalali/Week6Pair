@@ -35,7 +35,7 @@ namespace Capstone.Tests
             "JOIN category_venue ON category_venue.venue_id = venue.id " +
             "JOIN category ON category.id = category_venue.category_id " +
             "WHERE venue_id = @venue_id ", connection);
-            venueID = (int)cmd.ExecuteScalar();
+            //venueID = (int)cmd.ExecuteScalar();
             connection.Close();
 
         }
@@ -43,27 +43,23 @@ namespace Capstone.Tests
         [TestCleanup]
         public void Cleanup()
         {
-            // Roll back the transaction
             transaction.Dispose();
         }
 
         [TestMethod]
         public void Get_Venue_Name()
         {
-            //arrange
             VenueSqlDAL venueSql = new VenueSqlDAL(ConnectionString);
             List<Venue> venuename = venueSql.GetVenueName();
-
-            //assert
+            
             Assert.IsNotNull(venuename);
         }
 
         [TestMethod]
         public void Get_Venue_Details()
         {
-            VenueSqlDAL venueSql = new VenueSqlDAL(ConnectionString);
-            //List<Venue> venueDetails = (List<Venue>)venueSql.GetVenueDetails();
-
+            //VenueSqlDAL venueSql = new VenueSqlDAL(ConnectionString);
+            //List<Venue> venueDetails = (List<Venue>)venueSql.GetVenueDetails(venueID);
             
             //Assert.IsNotNull(venueDetails);
         }
