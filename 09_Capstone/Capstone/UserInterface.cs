@@ -65,11 +65,12 @@ namespace Capstone
                         Console.WriteLine();
                         break;
                     case "4":
+                        CheckAvailableSpaces();
+                        Console.WriteLine();
                         // search for availability -- only requires the desired space, a start date, and an end date
                         //  a space is unavailable if any part of their preferred date range overlaops with an existing reservation
                         // if no spaces are available, indicate to user that are no available spaces and ask them if they would like to try a different search,
                         // if they say yes, restart the search dialog.
-                        Console.WriteLine();
                         break;
                     case "5":
                         MakeReservation();
@@ -249,6 +250,41 @@ namespace Capstone
             {
                 Console.WriteLine("*** DID NOT CREATE ***");
             }
+        }
+
+        private void CheckAvailableSpaces()
+        {
+            int resSpaceId = CLIHelper.GetInteger("Please enter the ID of the space you would like to reserve:");
+            Console.WriteLine();
+            int startDate = CLIHelper.GetInteger("What month would you like to make this reservation ? (ex.Jan = 1, Dec = 12)");
+            Console.WriteLine();
+            
+
+            List<Space> spaces = spaceDAL.CheckAvailableSpaces(resSpaceId, startDate);
+
+            if (spaces.Count > 0)
+            { Console.WriteLine("The following spaces are available based on your needs: ");
+                Console.WriteLine();
+                Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", "Space #", "Name", "Daily Rate", "Max. Occupancy"));
+                foreach (Space space in spaces)
+                {
+                    if(startDate != space.openFrom && space.openFrom > 0)
+                    {
+                        Console.WriteLine(String.Format("{0, -10} {1, -25} {2, -15} {3, -15}", space.id, space.name, space.dailyRate, space.maxOccupancy));
+                    }
+                    
+                    else
+                    {
+                        Console.WriteLine("Please try again!");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("**** NO RESULTS ****");
+            }
+
+
         }
 
 

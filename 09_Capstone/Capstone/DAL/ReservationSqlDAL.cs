@@ -15,9 +15,7 @@ namespace Capstone.DAL
 
 
         private string sql_MakeReservation = "INSERT into reservation (space_id, start_date, end_date, reserved_for) VALUES(@id, @start, @end, @reservation_for)";
-        private string sql_GetAvailableSpaces = "SELECT* FROM space s WHERE venue_id = @venue_id AND s.id NOT IN " +
-            "(SELECT s.id from reservation r JOIN space s on r.space_id = s.id WHERE s.venue_id= @venue_id " +
-            "AND r.end_date >= @req_from_date AND r.start_date <= @req_to_date ";
+      
 
         public ReservationSqlDAL(string databaseconnectionString)
         {
@@ -54,7 +52,6 @@ namespace Capstone.DAL
             }
             return result;
         }
-
 
     }
 }
