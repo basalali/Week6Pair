@@ -14,6 +14,7 @@ namespace Capstone.Models
         public string reservedFor { get; set; }
         public double totalCost { get; set; }
         public int howManyDays { get; set; }
+        
 
     }
 }

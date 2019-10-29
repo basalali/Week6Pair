@@ -164,20 +164,25 @@ namespace Capstone.DAL
 
                         while (reader.Read())
                         {
-                            if (reader["open_from"]  == DBNull.Value)
-                            {
-                                Space searcher = new Space();
-                                searcher.id = Convert.ToInt32(reader["id"]);
-                                searcher.venue_id = Convert.ToInt32(reader["venue_id"]);
-                                searcher.name = Convert.ToString(reader["name"]);
-                                searcher.isAccessbile = Convert.ToBoolean(reader["is_accessible"]);
-                                //searcher.openFrom = Convert.ToInt32(reader["open_from"]);
-                                //searcher.openTo = Convert.ToInt32(reader["open_to"]);
-                                searcher.dailyRate = Convert.ToDouble(reader["daily_rate"]);
-                                searcher.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
 
-                                searching.Add(searcher);
+                            Space searcher = new Space();
+                            searcher.id = Convert.ToInt32(reader["id"]);
+                            searcher.venue_id = Convert.ToInt32(reader["venue_id"]);
+                            searcher.name = Convert.ToString(reader["name"]);
+                            searcher.isAccessbile = Convert.ToBoolean(reader["is_accessible"]);
+                            searcher.dailyRate = Convert.ToDouble(reader["daily_rate"]);
+                            searcher.maxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
+
+
+                            if (reader["open_from"]  != DBNull.Value)
+                            {
+ 
+                                searcher.openFrom = Convert.ToInt32(reader["open_from"]);
+                                searcher.openTo = Convert.ToInt32(reader["open_to"]);
+
                             }
+
+                            searching.Add(searcher);
                         }
                         return searching;
 
