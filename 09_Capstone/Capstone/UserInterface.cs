@@ -74,11 +74,6 @@ namespace Capstone
                     case "5":
                         MakeReservation();
                         Console.WriteLine();
-                        // Reserve a space OR make a reservation -- a space requires the name of the person or group reserving the sapce, a start and end date
-                        //What is the name of the person or group reserving this space?
-                        //how many days will you need the space
-                        //how many people will be in attendance?
-                        // confirmation ID:
                         break;
                     case "6":
                         break;
@@ -233,20 +228,22 @@ namespace Capstone
                 endDate= endDates,
                 reservedFor = reserved_for
             };
-    
             int dal = reservationDAL.MakeReservation(resSpaceId, startDates, endDates, reserved_for);
             if (dal > 0)
             {
+                Space space = spaceDAL.GetASpaceName(resSpaceId);
+
                 Console.WriteLine(String.Format("{0, -15}", "Thanks for submitting your reservation! The details for your event are listed below: "));
-                Console.WriteLine();
-                Console.WriteLine("Confirmation #:" + RandomString(resSpaceId));
-                // SpaceName
-                //Venue Name
-                Console.WriteLine("Reserved For: " + reserved_for);
-                Console.WriteLine("Attendees: " + numOfPeople);
-                Console.WriteLine("Arrival Date: " + Convert.ToDateTime(startDates));
-                Console.WriteLine("Departure Date: " + Convert.ToDateTime  (endDates));
-                //    Total Cost: $1,750
+                    Console.WriteLine();
+                    Console.WriteLine("Confirmation #: " + RandomString(resSpaceId));
+                    //Venue Name
+                    Console.WriteLine("Space: " + space.name);
+                    Console.WriteLine("Reserved For: " + reserved_for);
+                    Console.WriteLine("Attendees: " + numOfPeople);
+                    Console.WriteLine("Arrival Date: " + Convert.ToDateTime(startDates));
+                    Console.WriteLine("Departure Date: " + Convert.ToDateTime(endDates));
+                    Console.WriteLine("Total Cost: " + space.dailyRate);
+
             }
             else
             {

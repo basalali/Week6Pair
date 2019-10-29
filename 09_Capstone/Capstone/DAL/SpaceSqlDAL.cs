@@ -15,6 +15,7 @@ namespace Capstone.DAL
 
         private string connectionString;
         private string sql_GetSpaces = "SELECT * from space WHERE venue_id = @venue_id;";
+        private string sql_GetASingleSpace = "SELECT * from space WHERE space.id = @id; ";
 
         /// <summary>
         /// Creates a new sql-based space DAL.
@@ -93,7 +94,54 @@ namespace Capstone.DAL
             return space;
         }
 
-  
+        public Space GetASpaceName(int id)
+        {
+            Space spaces = new Space();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(sql_GetASingleSpace, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        
+
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            Space result = ConvertReaderToSpaces(reader);
+                            spaces = result;
+
+                        }
+
+                    }
+                    return spaces;
+                }
+            }
+
+            catch
+            {
+                spaces = new Space();
+            }
+
+            return spaces;
+        }
+
+        private Space ConvertReaderToSpaces(SqlDataReader reader)
+        {
+            Space space = new Space();
+
+            space.id = Convert.ToInt32(reader["id"]);
+            space.dailyRate = Convert.ToDouble(reader["daily_rate"]);
+            space.name = Convert.ToString(reader["name"]);
+
+
+            return space;
+        }
+
+
 
     }
 }
